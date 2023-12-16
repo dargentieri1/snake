@@ -19,6 +19,7 @@ public class Controller : MonoBehaviour
     private bool right = false;
 
     private List<GameObject> snakeParts; // parti dello Snake
+    private List<Vector3> tmpPosParts;
 
     private float progress = 0;
 
@@ -26,6 +27,7 @@ public class Controller : MonoBehaviour
     void Start()
     {
         snakeParts = new List<GameObject>();
+        tmpPosParts = new List<Vector3>();
         snakeParts.Add(snake.transform.GetChild(4).gameObject);
 
         MA = new GameObject[8,8];
@@ -79,6 +81,12 @@ public class Controller : MonoBehaviour
             xSnakePred = xSnake;
             ySnakePred = ySnake;
 
+            tmpPosParts.Clear();
+
+            for(int i = 0; i < snakeParts.Count; i++) {
+                tmpPosParts.Add(snakeParts[i].transform.position);
+            }
+
             if(up) {
                 xSnake--;
             } else if(down) {
@@ -99,8 +107,11 @@ public class Controller : MonoBehaviour
             progress += speed * Time.deltaTime / distance;
             snake.transform.position = Vector3.Lerp(snake.transform.position, MA[xSnake, ySnake].transform.position, progress);
             int j=0;
+            print(tmpPosParts.Count + " : " + snakeParts.Count);
 			for(int i=1;i<snakeParts.Count;i++) {
-				snakeParts[i].transform.position = Vector3.Lerp(snakeParts[i].transform.position, snakeParts[j].transform.position, progress);	
+                // float distancePart = Vector3.Distance(snakeParts[i].transform.position, snakeParts[j].transform.position);
+                // float progressPart = speed * Time.deltaTime / distancePart;
+				snakeParts[i].transform.position = Vector3.Lerp(snakeParts[i].transform.position, tmpPosParts[i - 1], progress);	
 			}
 			
 			if(progress >= 1) {
