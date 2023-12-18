@@ -99,16 +99,15 @@ public class Controller : MonoBehaviour
         }
         
         if(xSnake > 7 || ySnake > 7 || xSnake < 0 || ySnake < 0) {
-            print("Game Over!");
+            SetGameOver();
         } 
 		//<-[T][][][][]
 		else {
-            float distance = Vector3.Distance(snake.transform.position, MA[xSnake, ySnake].transform.position);
+            float distance = Vector3.Distance(snakeParts[0].transform.position, MA[xSnake, ySnake].transform.position);
             progress += speed * Time.deltaTime / distance;
-            snake.transform.position = Vector3.Lerp(snake.transform.position, MA[xSnake, ySnake].transform.position, progress);
-            int j=0;
-            print(tmpPosParts.Count + " : " + snakeParts.Count);
-			for(int i=1;i<snakeParts.Count;i++) {
+            snakeParts[0].transform.position = Vector3.Lerp(snakeParts[0].transform.position, MA[xSnake, ySnake].transform.position, progress);
+            
+			for(int i=1;i<snakeParts.Count && i - 1 < tmpPosParts.Count;i++) {
                 // float distancePart = Vector3.Distance(snakeParts[i].transform.position, snakeParts[j].transform.position);
                 // float progressPart = speed * Time.deltaTime / distancePart;
 				snakeParts[i].transform.position = Vector3.Lerp(snakeParts[i].transform.position, tmpPosParts[i - 1], progress);	
@@ -148,6 +147,10 @@ public class Controller : MonoBehaviour
         
         tail.transform.SetParent(snake.transform);
         snakeParts.Add(tail);
+    }
+
+    public void SetGameOver() {
+        print("Game Over!");
     }
 }
 
